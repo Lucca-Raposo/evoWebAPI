@@ -1,0 +1,192 @@
+<div *ngIf="selectedDepartment && !expandIsActive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Sigla</th>
+                <th scope="col">Funcionários</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let dep of departments">
+                <td scope="row">{{dep.id}}</td>
+                <td>{{dep.name}}</td>
+                <td>{{dep.abbrev}}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary">Expandir</button>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-warning" (click)="selectDepartment(dep)">Editar</button>
+                    <button class="btn btn-sm btn-outline-danger">Excluir</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+
+
+    <form [formGroup]="departmentForm" class="ml-3">
+        <h2 style="text-align:center"> Editar departamento: {{selectedDepartment.name}}</h2>
+        <div class="mb-3">
+            <label class="form-label">Nome</label>
+            <input formControlName="name" class="form-control">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Sigla</label>
+            <input formControlName="abbrev" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!departmentForm.valid"
+            (click)="submmitEditedDepartment()">Concluir</button>
+        <button class="btn btn-sm btn-outline-danger" (click)="unselectDepartment()">Fechar</button>
+    </form>
+    <br>
+
+
+</div>
+
+<div *ngIf="!selectedDepartment && !expandIsActive">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Nome</th>
+                <th scope="col">Sigla</th>
+                <th scope="col">Funcionários</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let dep of departments">
+                <td scope="row">{{dep.id}}</td>
+                <td>{{dep.name}}</td>
+                <td>{{dep.abbrev}}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary"
+                        (click)="expandIsActive = true; selectDepartment(dep); loadEmployees(dep)">Expandir</button>
+                </td>
+                <td>
+                    <button class="btn btn-sm btn-outline-warning" (click)="selectDepartment(dep)">Editar</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteDepartment(dep)">Excluir</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center">
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="newDepIsActive = true">Novo
+            Departamento</button>
+    </div>
+
+    <div *ngIf="newDepIsActive">
+        <br>
+        <form [formGroup]="departmentForm" class="ml-3">
+            <h2 style="text-align:center"> Novo Departamento: </h2>
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input formControlName="name" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Sigla</label>
+                <input formControlName="abbrev" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!employeeForm.valid"
+                (click)="createDepartment()">Criar</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="newDepIsActive = false">Fechar</button>
+        </form>
+    </div>
+
+
+</div>
+
+
+<div *ngIf="selectedDepartment && expandIsActive">
+    <h2 style="text-align:center"> Funcionários do departamento: {{selectedDepartment.name}}</h2>
+    <br>
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Foto</th>
+                <th scope="col">Nome</th>
+                <th scope="col">RG</th>
+                <th scope="col">Departamento</th>
+                <th scope="col">Opções</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let emp of employees">
+                <td>{{emp.id}}</td>
+                <td><img [src]="sanitizer.bypassSecurityTrustResourceUrl(emp.picture)" width="100px" height="100px">
+                </td>
+                <td>{{emp.name}}</td>
+                <td>{{emp.rg}}</td>
+                <td>{{selectedDepartment.name}}</td>
+                <td>
+                    <button class="btn btn-sm btn-outline-warning"
+                        (click)="selectEmployee(emp); editEmpIsActive = true">Editar</button>
+                    <button class="btn btn-sm btn-outline-danger" (click)="deleteEmployee(emp)">Excluir</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="d-flex justify-content-center mb-3">
+        <button type="button" class="btn btn-sm btn-outline-primary" (click)="newEmpIsActive = true">Novo
+            Funcionário</button>
+    </div>
+    <div class="d-flex justify-content-center">
+        <button class="btn btn-sm btn-outline-danger"
+            (click)="expandIsActive = false; unselectDepartment()">Voltar</button>
+    </div>
+
+    <div *ngIf="newEmpIsActive">
+        <br>
+        <form [formGroup]="employeeForm" class="ml-3">
+            <h2 style="text-align:center"> Novo Funcionário: </h2>
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input formControlName="name" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">RG</label>
+                <input type="number" formControlName="rg" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Foto</label>
+                <br>
+                <input type="file" (change)="uploadFile($event)">
+            </div>
+            <br>
+            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!employeeForm.valid"
+                (click)="createEmployee(selectedDepartment); newEmpIsActive = false">Criar</button>
+            <button class="btn btn-sm btn-outilne-danger" (click)="newEmpIsActive = false">Fechar</button>
+        </form>
+    </div>
+
+    <div *ngIf="editEmpIsActive && selectedEmployee">
+        <br>
+        <form [formGroup]="employeeForm" class="ml-3">
+            <h2 style="text-align:center"> Editar Funcionário: </h2>
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input formControlName="name" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">RG</label>
+                <input formControlName="rg" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Departamento</label>
+                <input formControlName="departmentId" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Foto</label>
+                <br>
+                <input type="file" (change)="uploadFile($event)">
+            </div>
+            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!employeeForm.valid"
+                (click)="editEmployee(selectedEmployee)">Concluir</button>
+            <button class="btn btn-sm btn-outline-danger" (click)="editEmpIsActive = false">Fechar</button>
+        </form>
+    </div>
+</div>

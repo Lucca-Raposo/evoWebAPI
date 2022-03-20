@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "wIIgaC08ZWb0xfx0+BzgGAhC9cTInG8LcWiH9QzR9No=",
+  "Source": "evoWebAPI",
+  "BasePath": "_content/evoWebAPI",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
