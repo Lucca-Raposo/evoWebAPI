@@ -199,7 +199,7 @@ export class DepartmentsComponent implements OnInit {
     var formData: any = new FormData();
     formData.append('name', this.employeeForm.get('name')?.value);
     formData.append('RG', this.employeeForm.get('rg')?.value);
-    formData.append('departmentId', department.id);
+    formData.append('departmentId', this.selectedDepartment?.id);
     formData.append('picture', this.employeeForm.get('picture')?.value);
 
     this.employeeService.post(formData).subscribe(
@@ -212,5 +212,4 @@ export class DepartmentsComponent implements OnInit {
       }
     )
   }
-
 }

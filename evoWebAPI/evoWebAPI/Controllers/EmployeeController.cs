@@ -52,7 +52,7 @@ namespace evoWebAPI.Controllers
 
             if (!ModelState.IsValid)
             {
-                return BadRequest();
+                return BadRequest("aqui");
             }
 
             var department = await context.Departments.FirstOrDefaultAsync(x => x.id == employeeDTO.departmentId);
@@ -62,9 +62,11 @@ namespace evoWebAPI.Controllers
                 return NotFound("O Departamento informado não existe");
             }
 
+            string uniqueFileName = Path.GetFileNameWithoutExtension(picture.FileName) + DateTime.Now.ToString("yymmffff") + Path.GetExtension(picture.FileName);
+
             try
             {
-                using (FileStream filestream = System.IO.File.Create(_environment.ContentRootPath + "\\Images\\" + picture.FileName))
+                using (FileStream filestream = System.IO.File.Create(_environment.ContentRootPath + "\\Images\\" + uniqueFileName))
                 {
                     await picture.CopyToAsync(filestream);
                     filestream.Flush();
@@ -79,8 +81,8 @@ namespace evoWebAPI.Controllers
             {
                 name = employeeDTO.name,
                 RG = employeeDTO.RG,
-                picture = "http://127.0.0.1:8887/" + picture.FileName,
-                pictureName = picture.FileName,
+                picture = "http://127.0.0.1:8887/" + uniqueFileName,
+                pictureName = uniqueFileName,
                 departmentId = employeeDTO.departmentId,
                 department = department
             };
