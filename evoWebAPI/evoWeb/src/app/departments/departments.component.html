@@ -90,7 +90,7 @@
                 <label class="form-label">Sigla</label>
                 <input formControlName="abbrev" class="form-control">
             </div>
-            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!employeeForm.valid"
+            <button type="submit" class="btn btn-sm btn-outline-success" [disabled]="!departmentForm.valid"
                 (click)="createDepartment()">Criar</button>
             <button class="btn btn-sm btn-outline-danger" (click)="newDepIsActive = false">Fechar</button>
         </form>
